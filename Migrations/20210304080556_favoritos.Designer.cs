@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EntityFrameworkCodeFirst1.Migrations
 {
-    [DbContext(typeof(BlogContext))]
+    [DbContext(typeof(TvShowsContext))]
     [Migration("20210304080556_favoritos")]
     partial class favoritos
     {

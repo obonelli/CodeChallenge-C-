@@ -1,115 +1,205 @@
 ﻿using EntityFrameworkCodeFirst1.Models;
 using System;
+using System.Threading.Tasks;
 using System.Linq;
 using AutoMapper;
 using AutoMapper.Configuration;
 using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EntityFrameworkCodeFirst1
 {
     class Program
     {
-        static void Main(string[] args)
+        static ITvShowService tvShowService ;
+
+        static async Task Main(string[] args)
         {
+            //tvShowService = new TvShowService();
 
-            //var config = new MapperConfiguration(cfg => {
-            //    cfg.CreateMap<Source, Dest>();
-            //});
+            var serviceCollection = new ServiceCollection();
+            ConfigureServices(serviceCollection);
+            var serviceProvider = serviceCollection.BuildServiceProvider();
+            var service = serviceProvider.GetRequiredService<ITvShowService>();
+            tvShowService = service;
 
-            //IMapper mapper = config.CreateMapper();
-            //var source = new Source();
-            //var dest = mapper.Map<Source, Dest>(source);
+            InitializeAutomapper();
 
-            //addBlog();
-            //UpdateBlog();
-            getFirstList();
-            //getRemove();
-            
-            //Console.WriteLine("Listo " + value);
-            Console.ReadKey();
+            //loads the list
+            await LoadList();
+
+            GetFirstList();          
 
        
         }
 
- 
-
-        static void addBlog()
+        static async Task LoadList()
         {
+            var elements = tvShowService.GetAllElements();
 
-
-
-            using (var blog=new BlogContext())
+            if (elements.Count() == 0 )
             {
-                try
-                {
-
-                    List<Blog> b = new List<Blog>();
-
-                    b.Add(new Blog { URL = "Under the Dome", favoritos = false });
-                    b.Add(new Blog { URL = "Person of Interest", favoritos = false });
-                    b.Add(new Blog { URL = "Bitten", favoritos = false });
-                    b.Add(new Blog { URL = "Arrow", favoritos = false });
-                    b.Add(new Blog { URL = "True Detective", favoritos = false });
-                    b.Add(new Blog { URL = "The 100", favoritos = false });
-                    b.Add(new Blog { URL = "Homeland", favoritos = false });
-                    b.Add(new Blog { URL = "Glee", favoritos = false });
-                    b.Add(new Blog { URL = "Revenge", favoritos = false });
-                    b.Add(new Blog { URL = "Grimm", favoritos = false });
-                    b.Add(new Blog { URL = "Gotham", favoritos = false });
-                    b.Add(new Blog { URL = "Lost Girl", favoritos = false });
-                    b.Add(new Blog { URL = "The Flash", favoritos = false });
-                    b.Add(new Blog { URL = "Continuum", favoritos = false });
-                    b.Add(new Blog { URL = "Constantine", favoritos = false });
-
-                    //{
-                    //    URL = "Under the Dome",
-                    //    favoritos = false
-                    //};
-
-                    //blog.Blogs.Add(b);
-
-                    blog.Blogs.AddRange(b);
-
-
-                    blog.SaveChanges();
-                }
-                catch (Exception ex)
-                {
-                    //Log, handle or absorbe I don't care ^_^
-                }
-
-     
-
+                 await AddTvShows();
             }
+
+        }
+
+        private static void ConfigureServices(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddSingleton<ITvShowService, TvShowService>();            
+        }
+            static void InitializeAutomapper()
+        {
+            AutoMapper.Mapper.CreateMap<TvShows, TvShowView>();            
+        }
+
+
+        //Execution order
+
+        //Execute 1 time for Add the list of TvShows.
+        static async Task AddTvShows()
+        {
+            await tvShowService.AddShow("Under the Dome");
+            await tvShowService.AddShow("Under the Dome");
+            await tvShowService.AddShow("Under the Dome");
+            await tvShowService.AddShow("Under the Dome");
+            await tvShowService.AddShow("Under the Dome");
+            await tvShowService.AddShow("Under the Dome");
+            await tvShowService.AddShow("Under the Dome");
+            await tvShowService.AddShow("Under the Dome");
+            await tvShowService.AddShow("Under the Dome");
+            await tvShowService.AddShow("Under the Dome");
+
+
+            //using (var addList = new TvShowsContext())
+            //{
+            //    try
+            //    {
+
+            //        List<TvShows> a = new List<TvShows>();
+
+            //        a.Add(new TvShows { Tittle = "Under the Dome", favorites = false });
+            //        a.Add(new TvShows { Tittle = "Person of Interest", favorites = false });
+            //        a.Add(new TvShows { Tittle = "Bitten", favorites = false });
+            //        a.Add(new TvShows { Tittle = "Arrow", favorites = false });
+            //        a.Add(new TvShows { Tittle = "True Detective", favorites = false });
+            //        a.Add(new TvShows { Tittle = "The 100", favorites = false });
+            //        a.Add(new TvShows { Tittle = "Homeland", favorites = false });
+            //        a.Add(new TvShows { Tittle = "Glee", favorites = false });
+            //        a.Add(new TvShows { Tittle = "Revenge", favorites = false });
+            //        a.Add(new TvShows { Tittle = "Grimm", favorites = false });
+            //        a.Add(new TvShows { Tittle = "Gotham", favorites = false });
+            //        a.Add(new TvShows { Tittle = "Lost Girl", favorites = false });
+            //        a.Add(new TvShows { Tittle = "The Flash", favorites = false });
+            //        a.Add(new TvShows { Tittle = "Continuum", favorites = false });
+            //        a.Add(new TvShows { Tittle = "Constantine", favorites = false });
+
+
+            //        //Newlist.Shows.Add(b);
+
+            //        addList.Shows.AddRange(a);
+
+
+            //        addList.SaveChanges();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        throw;
+            //    }
+
+
+            //}
 
 
         }
-        static void UpdateBlog(int aValue)
+
+        //This will Show the first TvShows list while start the program.
+        static void GetFirstList()
         {
-            using (var blog = new BlogContext())
-            {
+            //using (var firstList = new TvShowsContext())
+            //{
+
+
                 try
                 {
-                  var result = blog.Blogs.SingleOrDefault(b => b.Id == aValue);
+                    
+
+
+
+                    var tvshows = tvShowService.GetAllElements();
+
+                    //Console.WriteLine("TvShow LIST BEFORE SORTING \n");
+
+                   
+                    Console.WriteLine(" \n");
+                    Console.WriteLine("TvShow LIST ALPHABETIC SORTING \n");
+                    var result = tvshows.OrderBy(e => e.Tittle);
+
+                    foreach (var emp in result)
+                    {
+
+                        if (emp.favorites == true)
+                        {
+                            Console.WriteLine($"Id: {emp.Id} \t TvShow: {emp.Tittle} *");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Id: {emp.Id} \t TvShow: {emp.Tittle}");
+
+                        }
+                    }
+                  
+                     getCommands();
+
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+
+
+            //}
+         
+
+        }
+
+        static async Task updateFavorites(int aValue)
+        {
+
+
+            //await Task.Run(() =>
+            //{
+
+            //using (var updateFavoriteList = new TvShowsContext())
+            //{            
+                
+                try
+                {
+
+                        //var result = updateFavoriteList.Shows.SingleOrDefault(b => b.Id == aValue);
+                var result = tvShowService.GetShowById(aValue);
+
                 if (result != null)
                 {   
-                    if(result.favoritos == true)
+                    if(result.favorites == true)
                     {
-                        result.favoritos = false;
+                        result.favorites = false;
                             Console.Write("\n");
-                            Console.WriteLine($"The TvShow with the Id: ({result.Id}) and Tittle: ({result.URL}) has been Remove from your favorite list.");
+                            Console.WriteLine($"The TvShow with the Id: ({result.Id}) and Tittle: ({result.Tittle}) has been Remove from your favorite list.");
 
                     }
                     else
                     {
-                        result.favoritos = true;
+                        result.favorites = true;
                             Console.Write("\n");
-                            Console.WriteLine($"The Show with the Id: ({result.Id}) and TvShow: ({result.URL}) has been Add to your favorite list.");
-                        }
-
-                   blog.SaveChanges();
-
+                            Console.WriteLine($"The Show with the Id: ({result.Id}) and TvShow: ({result.Tittle}) has been Add to your favorite list.");
                     }
+
+
+                        await tvShowService.UpdateShowAsync(result);
+                        
+
+                }
                     else
                     {
                         Console.Write("\n");
@@ -117,286 +207,167 @@ namespace EntityFrameworkCodeFirst1
 
                     }
 
-                    //Blog b = new Blog() { Id=1,URL = "New Test URL" };
+                await getCommands();
 
-                    //blog.Blogs.Update(b);
-
-                    //blog.SaveChanges();
-                }
+            }
                 catch (Exception ex)
                 {
+                        throw;
+                }
 
-                }
-                Console.Write("----------------------------------------");
-                Console.Write("\n available commands: \n");
-                Console.Write("list => This will show all TvShows \n");
-                Console.Write("favorites => This will show all Favorites \n");
-                Console.Write("Number Id example: (5) => This will Update a TvShow from unfavorite to favorite and vice versa \n");
-                Console.Write("\n");
-                string value = Console.ReadLine();
-                Console.Clear();
-                int parsed;
-                if (int.TryParse(value, out parsed))
-                {
-                    UpdateBlog(parsed);
-                }
-                else
-                {
-                    sentChanneler(value);
 
-                }
-            }
+           
+
+            //}
+
+            //return  await getCommands();
+            //});
 
         }
 
-        static void getBlog()
-        {
-            using (var blog = new BlogContext())
-            {
-
-
-                try
-                {
-                    IEnumerable<Blog> employeeList = blog.Blogs.ToList();
-
-                //Console.WriteLine("TvShow LIST BEFORE SORTING \n");
-
-                foreach (Blog emp in employeeList)
-                {
-                    //Console.WriteLine(emp.Id + "\t" + emp.URL);
-
-                }
-
-                Console.WriteLine(" \n");
-                Console.WriteLine("TvShow LIST ALPHABETIC SORTING \n");
-                var result = employeeList.OrderBy(e => e.URL);
-                
-                foreach (var emp in result)
-                {
-                   
-                    if (emp.favoritos == true) 
-                    { 
-                    Console.WriteLine($"Id: {emp.Id} \t TvShow: {emp.URL} *");
-                    }
-                    else
-                    {
-                     Console.WriteLine($"Id: {emp.Id} \t TvShow: {emp.URL}");
-
-                    }
-                }
-                    Console.Write("----------------------------------------");
-                    Console.Write("\n available commands: \n");
-                    Console.Write("list => This will show all TvShows \n");
-                    Console.Write("favorites => This will show all Favorites \n");
-                    Console.Write("Number Id example: (5) => This will Update a TvShow from unfavorite to favorite and vice versa \n");
-                    Console.Write("\n");
-                    string value = Console.ReadLine();
-                    Console.Clear();
-                    int parsed;
-                    if (int.TryParse(value, out parsed))
-                    {
-                        UpdateBlog(parsed);
-                    }
-                    else
-                    {
-                        sentChanneler(value);
-
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    //Log, handle or absorbe I don't care ^_^
-                }
-
-
-            }
-
-
-        }
-
-        static void getFirstList()
-        {
-            using (var blog = new BlogContext())
-            {
-
-
-                try
-                {
-                    IEnumerable<Blog> tvshows = blog.Blogs.ToList();
-
-                    //Console.WriteLine("TvShow LIST BEFORE SORTING \n");
-
-                    foreach (Blog emp in tvshows)
-                    {
-                        //Console.WriteLine(emp.Id + "\t" + emp.URL);
-
-                    }
-
-                    Console.WriteLine(" \n");
-                    Console.WriteLine("TvShow LIST ALPHABETIC SORTING \n");
-                    var result = tvshows.OrderBy(e => e.URL);
-
-                    foreach (var emp in result)
-                    {
-
-                        if (emp.favoritos == true)
-                        {
-                            Console.WriteLine($"Id: {emp.Id} \t TvShow: {emp.URL} *");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Id: {emp.Id} \t TvShow: {emp.URL}");
-
-                        }
-                    }
-                    Console.Write("----------------------------------------");
-                    Console.Write("\n available commands: \n");
-                    Console.Write("list => This will show all TvShows \n");
-                    Console.Write("favorites => This will show all Favorites \n");
-                    Console.Write("Number Id example: (5) => This will Update a TvShow from unfavorite to favorite and vice versa \n");
-                    Console.Write("\n");
-                    string value = Console.ReadLine();
-                    Console.Clear();
-                    int parsed;
-                    if (int.TryParse(value, out parsed))
-                    {
-                        UpdateBlog(parsed);
-                    }
-                    else
-                    {
-                        sentChanneler(value);
-                      
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    //Log, handle or absorbe I don't care ^_^
-                }
-
-
-            }
-
-
-        }
-
-        static void getFavorites(string aValue)
-        {
-            using (var blog = new BlogContext())
-            {
-
-                try
-                {
-                    IEnumerable<Blog> employeeList = blog.Blogs.ToList();
-
-                    //Console.WriteLine("TvShow LIST BEFORE SORTING \n");
-
-                    foreach (Blog emp in employeeList)
-                    {
-                        //Console.WriteLine(emp.Id + "\t" + emp.URL);
-
-                    }
-
-                    Console.WriteLine(" \n");
-                    Console.WriteLine("TvShow FAVORITE LIST ALPHABETIC SORTING \n");
-
-                    var result = employeeList.OrderBy(e => e.URL);
-
-                    foreach (var emp in result)
-                    {
-                        if (emp.favoritos == true)
-                        {
-                            Console.WriteLine($"Id: {emp.Id} \t TvShow: {emp.URL} *");
-
-                        }
-
-                    }
-                }
-                catch (Exception ex)
-                {
-                    //Log, handle or absorbe I don't care ^_^
-                }
-                   
-                    Console.Write("----------------------------------------");
-                    Console.Write("\n available commands: \n");
-                    Console.Write("list => This will show all TvShows \n");
-                    Console.Write("favorites => This will show all Favorites \n");
-                    Console.Write("Number Id example: (5) => This will Update a TvShow from unfavorite to favorite and vice versa \n");
-                    Console.Write("\n");
-                    string value = Console.ReadLine();
-                    Console.Clear();
-
-                int parsed;
-                if (int.TryParse(value, out parsed))
-                {
-                    UpdateBlog(parsed);
-                }
-                else
-                {
-                    sentChanneler(value);
-
-                }
-
-
-
-
-            }
-
-
-        }
-
-        static void getRemove()
-        {
-            using (var blog = new BlogContext())
-            {
-                Blog b = new Blog() { Id = 2 };
-
-                blog.Blogs.Remove(b);
-
-                blog.SaveChanges();
-
-
-            }
-
-
-        }
-
-        static void sentChanneler(string storage)
+        static async Task sentChanneler(string storage)
         {
 
             switch (storage)
             {
                 case "favorites":
-                    getFavorites(storage);
+                    await GetFavorites(storage);
                     break;
                 case "list":
-                    getBlog();
+                    await GetTvShowsList();
                     break;
-                 default:
-                    Console.WriteLine("invalid commands");
-                    Console.Write("----------------------------------------");
-                    Console.Write("\n available commands: \n");
-                    Console.Write("list => This will show all TvShows \n");
-                    Console.Write("favorites => This will show all Favorites \n");
-                    Console.Write("Number Id example: (5) => This will Update a TvShow from unfavorite to favorite and vice versa \n");
-                    Console.Write("\n");
-                    string value = Console.ReadLine();
-                    Console.Clear();
-
-                    int parsed;
-                    if (int.TryParse(value, out parsed))
-                    {
-                        UpdateBlog(parsed);
-                    }
-                    else
-                    {
-                        sentChanneler(value);
-
-                    }
+                default:
+                    await getCommands();
                     break;
             }
         }
 
+    
+
+
+        static async Task GetTvShowsList()
+        {
+            
+                try
+                {
+                   var tvshows = tvShowService.GetAllElements();
+
+
+
+
+                Console.WriteLine(" \n");
+                Console.WriteLine("TvShow LIST ALPHABETIC SORTING \n");
+                var result = tvshows.OrderBy(e => e.Tittle);
+                
+                foreach (var emp in result)
+                {
+                   
+                    if (emp.favorites == true) 
+                    { 
+                    Console.WriteLine($"Id: {emp.Id} \t TvShow: {emp.Tittle} *");
+                    }
+                    else
+                    {
+                     Console.WriteLine($"Id: {emp.Id} \t TvShow: {emp.Tittle}");
+
+                    }
+                }
+                    await getCommands();
+
+                }
+                catch (Exception ex)
+                {
+                    //Log, handle or absorbe I don't care ^_^
+                }
+
+
+            
+
+
+        }
+
+        
+
+        static async Task GetFavorites(string aValue)
+        {
+            
+
+                try
+                {
+                    var TvShowList = tvShowService.GetFavorites();
+
+                    //Console.WriteLine("TvShow LIST BEFORE SORTING \n");
+
+
+                    Console.WriteLine(" \n");
+                    Console.WriteLine("TvShow FAVORITE LIST ALPHABETIC SORTING \n");
+
+
+                    foreach (var emp in TvShowList)
+                    {
+                        Console.WriteLine($"Id: {emp.Id} \t TvShow: {emp.Tittle} *");
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //Log, handle or absorbe I don't care ^_^
+                }
+
+                await getCommands();
+
+            
+
+
+        }
+
+        static async Task getCommands()
+        {
+           
+
+            Console.Write("----------------------------------------");
+            Console.Write("\n available commands: \n");
+            Console.Write("list => This will show all TvShows \n");
+            Console.Write("favorites => This will show all Favorites \n");
+            Console.Write("Number Id example: (5) => This will Update a TvShow from unfavorite to favorite and vice versa \n");
+            Console.Write("\n");
+            string value = Console.ReadLine();
+            Console.Clear();
+
+            int parsed;
+            if (int.TryParse(value, out parsed))
+            {
+                await updateFavorites(parsed);
+
+            }
+            else
+            {
+                await sentChanneler(value);
+
+            }
+
+
+        }
+
+
+        static void removeTvShow()
+        {
+            using (var RemoveShow = new TvShowsContext())
+            {
+                TvShows c = new TvShows() { Id = 1 };
+
+                RemoveShow.Shows.Remove(c);
+
+                RemoveShow.SaveChanges();
+
+
+            }
+
+
+        }
+
+
     }
+
 }
+

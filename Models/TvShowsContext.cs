@@ -6,11 +6,11 @@ using System.Text;
 
 namespace EntityFrameworkCodeFirst1.Models
 {
-    class BlogContext : DbContext
+    class TvShowsContext : DbContext
     {
 
         //Constructor
-        public BlogContext()
+        public TvShowsContext()
         {
            
 
@@ -18,12 +18,12 @@ namespace EntityFrameworkCodeFirst1.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            SqlConnection con = new SqlConnection(@"Data Source=DESKTOP-AT1GU9C\BCDEMO;Initial Catalog=Blog_DB;Integrated Security=True;User ID=sa;Password=proyecto2021;");
+            SqlConnection con = new SqlConnection(@"Data Source=DESKTOP-AT1GU9C\BCDEMO;Initial Catalog=TvShows;Integrated Security=True;User ID=sa;Password=proyecto2021;");
             optionsBuilder.UseSqlServer(con);
             base.OnConfiguring(optionsBuilder);
         }
 
-        public DbSet<Post> Posts { get; set; }
-        public DbSet<Blog> Blogs { get; set; }
+     
+        public DbSet<TvShows> Shows { get; set; }
     }
 }

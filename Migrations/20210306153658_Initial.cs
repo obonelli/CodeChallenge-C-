@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace EntityFrameworkCodeFirst1.Migrations
+namespace TvShowApp.Migrations
 {
     public partial class Initial : Migration
     {

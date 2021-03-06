@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
-using EntityFrameworkCodeFirst1.Models;
+using TvShowApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EntityFrameworkCodeFirst1
+namespace TvShowApp
 {
     public interface ITvShowService
     {
@@ -18,7 +18,7 @@ namespace EntityFrameworkCodeFirst1
 
         List<TvShowView> GetFavorites();
 
-        Task AddShow(string name);
+        Task AddShowAsync(string name);
     }
 
     public class TvShowService: ITvShowService
@@ -54,7 +54,7 @@ namespace EntityFrameworkCodeFirst1
             return shows;
         }
 
-        public async Task AddShow(string name)
+        public async Task AddShowAsync(string name)
         {
             try 
             { 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EntityFrameworkCodeFirst1.Models
+namespace TvShowApp.Models
 {
 
     public class TvShows

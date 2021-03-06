@@ -4,7 +4,7 @@ using System.Text;
 using AutoMapper;
 using AutoMapper.Configuration;
 
-namespace EntityFrameworkCodeFirst1.Models
+namespace TvShowApp.Models
 {
     
     public class TvShowView
